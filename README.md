@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # NL-HSIM
 
 **NL-HSIM** is a nonlinear high-dimensional set-based inference framework designed to detect group-level effects under complex correlation structures.  
