@@ -10,30 +10,56 @@
 ##    (glmnet requires at least 2 predictors in nodewise regressions).
 ##  - Parallel settings are automatically adjusted depending on the OS
 ##    (Windows is forced to run serially).
-source('ART.A.R')
-source('lasso.proj.R')
-source('prepare.data.R')
-source('calculate.Z.R')
-source('score.nodewiselasso.R')
-source('nodewise.getlambdasequence.R')
-source('cv.nodewise.bestlambda.R')
-source('cv.nodewise.err.unitfunction.R')
-source('cv.nodewise.totalerr.R')
-source('score.getZforlambda.R')
-source('score.getZforlambda.unitfunction.R')
-source('score.rescale.R')
-source('initial.estimator.R')
-source('do.initial.fit.R')
-source('despars.lasso.est.R')
-source('est.stderr.despars.lasso.R')
-source('preprocess.group.testing.R')
-source('get.clusterGroupTest.function.R')
-source('sandwich.var.est.stderr.R')
-source('improve.lambda.pick.R')
-source('calcM.R')
-source('calcMforcolumn.R')
-source('p.adjust.wy.R')
-source('ridge.proj.R')
+get_repo_root <- function() {
+  # 1) If using RStudio project, assume working dir is project root
+  if (file.exists("hdi_lasso")) return(".")
+  # 2) Otherwise, try location of this file (when sourced)
+  this_file <- tryCatch(normalizePath(sys.frames()[[1]]$ofile), error = function(e) NA)
+  if (!is.na(this_file)) {
+    cand <- dirname(this_file)
+    if (file.exists(file.path(cand, "hdi_lasso"))) return(cand)
+  }
+  # 3) fallback: current dir
+  return(".")
+}
+
+repo_root <- get_repo_root()
+hdi_dir   <- file.path(repo_root, "hdi_lasso")
+
+hdi_files <- c(
+  "ART.A.R",
+  "lasso.proj.R",
+  "prepare.data.R",
+  "calculate.Z.R",
+  "score.nodewiselasso.R",
+  "nodewise.getlambdasequence.R",
+  "cv.nodewise.bestlambda.R",
+  "cv.nodewise.err.unitfunction.R",
+  "cv.nodewise.totalerr.R",
+  "score.getZforlambda.R",
+  "score.getZforlambda.unitfunction.R",
+  "score.rescale.R",
+  "initial.estimator.R",
+  "do.initial.fit.R",
+  "despars.lasso.est.R",
+  "est.stderr.despars.lasso.R",
+  "preprocess.group.testing.R",
+  "get.clusterGroupTest.function.R",
+  "sandwich.var.est.stderr.R",
+  "improve.lambda.pick.R",
+  "calcM.R",
+  "calcMforcolumn.R",
+  "p.adjust.wy.R",
+  "ridge.proj.R"
+)
+
+for (f in hdi_files) {
+  fp <- file.path(hdi_dir, f)
+  if (!file.exists(fp)) stop("Missing HDI-Lasso file: ", fp)
+  source(fp)
+}
+
+
 lasso_model_omnibus <- function(
     X_design,
     Y,
