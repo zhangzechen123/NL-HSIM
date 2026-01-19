@@ -25,6 +25,59 @@ The scripts in `hdi_lasso/` are utility functions used by `lasso_model_omnibus.R
 They are loaded automatically via relative paths; users do **not** need to modify the working directory.
 
 <!-- readme-tree start -->
+```
+.
+├── .RData
+├── .github
+│   └── workflows
+│       └── action_readme_tree.yml
+├── .gitignore
+├── LICENSE
+├── README.md
+├── aspu
+│   ├── PowerUniv.R
+│   ├── Sum.R
+│   ├── SumSqU.R
+│   ├── UminPd.R
+│   └── aSPUd2.R
+├── environment.R
+├── generate_x.R
+├── hdi_lasso
+│   ├── ART.A.R
+│   ├── calcM.R
+│   ├── calcMforcolumn.R
+│   ├── calculate.Z.R
+│   ├── cv.nodewise.bestlambda.R
+│   ├── cv.nodewise.err.unitfunction.R
+│   ├── cv.nodewise.totalerr.R
+│   ├── despars.lasso.est.R
+│   ├── do.initial.fit.R
+│   ├── est.stderr.despars.lasso.R
+│   ├── get.clusterGroupTest.function.R
+│   ├── improve.lambda.pick.R
+│   ├── initial.estimator.R
+│   ├── lasso.proj.R
+│   ├── nodewise.getlambdasequence.R
+│   ├── p.adjust.wy.R
+│   ├── prepare.data.R
+│   ├── preprocess.group.testing.R
+│   ├── ridge.proj.R
+│   ├── sandwich.var.est.stderr.R
+│   ├── score.getZforlambda.R
+│   ├── score.getZforlambda.unitfunction.R
+│   ├── score.nodewiselasso.R
+│   └── score.rescale.R
+├── kpca.R
+├── lasso_model_omnibus.R
+├── nystrom_kpca_core.R
+├── preimage.R
+├── run_pca_baseline.R
+├── sorted_Group8.RData
+├── tree.bak
+└── treeview.sh
+
+5 directories, 44 files
+```
 <!-- readme-tree end -->
 
 
