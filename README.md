@@ -17,8 +17,10 @@ The implementation follows a **transparent script-based design**: all simulation
 - Open R (RStudio is recommended) and set the working directory to the project root folder
    (i.e., the folder that contains `README.md` and `environment.R`).
 ```r
-## Set the working directory to the unzipped NL-HSIM folder
-setwd("path/to/NL-HSIM")
+## After downloading "Code -> Download ZIP" and unzipping,
+## GitHub typically creates a folder named "NL-HSIM-main".
+## Set the working directory to the project root (the folder containing environment.R).
+setwd("C:/Users/Downloads/NL-HSIM-main/NL-HSIM-main") # <-- example, adjust as needed
 
 ## Sanity check: these files should exist in the working directory
 stopifnot(file.exists("environment.R"))
