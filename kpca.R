@@ -1,10 +1,14 @@
-## kpca.R
-##
-## This file implements the Nyström-based kernel PCA module used in NL-HSIM:
-## - nystrom_kpca_core():    Nyström approximation of Gaussian kernel PCA
-## - select_pc_preimage():   choose the number of kernel PCs via pre-image error
-## - build_kpca_designs():   construct three KPCA-based designs (P, PA, A)
-## - kpca_module_group():    wrapper to apply the above steps to one group of X
+# ============================================================
+# KPCA design matrix construction
+#
+# Three KPCA-based design matrices are constructed:
+# - P  : pre-image–guided truncation using r_P components
+# - PA : adaptive truncation within the P set
+# - A  : fully adaptive truncation based on global eigenvalues
+#
+# Eigenvectors are scaled by the square root of their
+# corresponding eigenvalues to preserve variance structure.
+# ============================================================
 
 
 build_kpca_designs <- function(evecs, evals, r_P) {

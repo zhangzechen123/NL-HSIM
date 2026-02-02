@@ -1,29 +1,20 @@
-## --------------------------------------------------------------------
-## Select the number of kernel principal components (r_P) using the
-## pre-image reconstruction criterion in a cross-validation manner.
-##
-## Idea:
-##  - For each candidate number of PCs (num = 1, 2, ..., max_r),
-##    we approximate the pre-image of the kernel mean in each fold
-##    and compute the reconstruction error of the fold-wise mean.
-##  - The pre-image error is averaged over folds, giving RE_vec[num].
-##  - We select r_P as the num that minimizes RE_vec[num].
-##
-## Input:
-##  - X_group:       n x p matrix for one group of features.
-##  - n_total:       total sample size (for the Nyström centers).
-##  - seed:          base seed used in cross-validation.
-##  - center_ratio:  proportion of centers used in Nyström KPCA.
-##  - nfold:         number of CV folds (default 10).
-##  - max_iter_preimg: maximum number of iterations when optimizing
-##                     the pre-image.
-##  - tol_preimg:    convergence threshold for the pre-image iteration.
-##
-## Output:
-##  - r_P:  selected number of PCs minimizing cross-validated
-##          pre-image error.
-##  - RE:   vector of reconstruction errors for candidate dimensions.
-## --------------------------------------------------------------------
+# ============================================================
+# Pre-image reconstruction–based dimension selection
+#
+# This function selects the truncation level of KPCA
+# components using cross-validated pre-image reconstruction
+# errors.
+#
+# IMPORTANT:
+# - This procedure is NOT intended for reconstructing
+#   individual observations.
+# - It is used solely as a criterion to select the number
+#   of KPCA components (r_P).
+#
+# Reconstruction error is evaluated at the level of
+# test-sample means to stabilize dimension selection.
+# ============================================================
+
 preimage <- function(
     X_group,
     n_total,
@@ -128,3 +119,6 @@ preimage <- function(
     RE  = RE_vec
   )
 }
+# Reconstruction error is computed between the mean of the
+# test samples and the estimated pre-image, rather than
+# pointwise reconstruction, to reduce variability

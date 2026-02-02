@@ -1,33 +1,21 @@
-## --------------------------------------------------------------
-## Nyström kernel PCA core routine.
-##
-## Input:
-##  - X:           n x p data matrix (rows are samples).
-##  - n_total:     total sample size used in the simulation (used
-##                 to determine the number of centers).
-##  - seed:        random seed controlling the Nyström subsampling
-##                 via k-means centers.
-##  - center_ratio: proportion of "centers" used in the Nyström
-##                  approximation (e.g. 0.05 * n_total).
-##
-## Steps:
-##  1) Compute a bandwidth parameter b via stdv(X).
-##  2) Use eff_kmeans() to select mm centers in the input space.
-##  3) Construct Gaussian kernel matrices W (center-center) and
-##     E (sample-center).
-##  4) Perform an eigen-decomposition of W, extract positive
-##     eigenvalues/vectors, and obtain the approximate feature
-##     map G (Nyström embedding).
-##  5) Center G in feature space and compute the centered kernel
-##     matrix Kc = Gc Gc^T.
-##  6) Perform SVD on Kc to obtain eigenvectors/eigenvalues of
-##     the centered kernel.
-##
-## Output:
-##  - evecs:    n x r matrix of kernel principal component directions.
-##  - evals:    length-r vector of corresponding eigenvalues.
-##  - bandwidth: bandwidth parameter b used in the Gaussian kernel.
-## --------------------------------------------------------------
+# ============================================================
+# Nyström KPCA core routine
+#
+# This function performs kernel PCA using a Nyström
+# approximation to reduce computational complexity.
+#
+# Key implementation details:
+# - A fixed proportion (5%) of the total sample size is used
+#   as Nyström centers, selected via an efficient k-means
+#   algorithm.
+# - The Gaussian kernel bandwidth is determined in a
+#   data-driven manner based on average pairwise squared
+#   distances.
+#
+# The output eigenvectors and eigenvalues are used to construct
+# KPCA-based design matrices for downstream inference.
+# ============================================================
+
 nystrom_kpca_core <- function(
     X,
     n_total
@@ -43,7 +31,8 @@ nystrom_kpca_core <- function(
   }
   ## Bandwidth parameter for the Gaussian kernel (data-driven)
   b  <- stdv(X)
-  ## Number of Nyström centers (at least 2 to avoid degeneracy)
+  # Fixed Nyström sampling ratio (5%) adopted for stability
+  # and computational efficiency across simulation settings
   mm <- max(2L, floor(0.05 * n_total))
   count   <- 0L
   max_try <- 100L
