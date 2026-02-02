@@ -1,3 +1,17 @@
+# ============================================================
+# environment.R
+#
+# This file initializes the simulation environment.
+# It loads all required packages and defines core numerical
+# utilities used throughout the KPCA and inference pipeline.
+#
+# NOTE:
+# - This file must be sourced before running any simulation.
+# - Functions defined here (e.g., bandwidth selection,
+#   squared distance computation) are critical for numerical
+#   stability and reproducibility.
+# ============================================================
+
 ## 1) Install and load required packages --------------------------------------
 required_pkgs <- c(
   "Matrix", "glmnet", "foreach", "MASS", "iterators",
