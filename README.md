@@ -10,7 +10,7 @@ The implementation follows a **transparent script-based design**: all simulation
 ## 1. Requirements
 
 - **R ≥ 4.0** (recommended)
-- Required R packages are automatically loaded in `environment.R`
+- Required R packages are automatically loaded in `environment.R`,which loads required packages and defines core numerical utilities, including squared-distance computation and data-driven kernel bandwidth selection. This file is essential for ensuring numerical stability and reproducibility across simulation settings.
 
 ### Quick start
 - Please **download the entire `NL-HSIM` repository** and extract it to a local directory.
