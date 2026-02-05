@@ -166,7 +166,8 @@ res1 <- kpca_module_group(
   nfold           = 10L,
   center_ratio    = 0.05,
   max_iter_preimg = 1000L,
-  tol_preimg      = 1e-5
+  tol_preimg      = 1e-5,
+  method = "ALL"
 )
 
 PX_P1  <- res1$PX_P    # Pre-image based KPCs
@@ -184,7 +185,8 @@ res2 <- kpca_module_group(
   nfold           = 10L,
   center_ratio    = 0.05,
   max_iter_preimg = 1000L,
-  tol_preimg      = 1e-5
+  tol_preimg      = 1e-5,
+  method = "ALL"
 )
 
 PX_P2  <- res2$PX_P
