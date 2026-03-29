@@ -45,6 +45,7 @@ They are loaded automatically via relative paths; users do **not** need to modif
 ├── .gitignore
 ├── LICENSE
 ├── README.md
+├── tutorial_case1.md
 ├── aspu
 │   ├── PowerUniv.R
 │   ├── Sum.R
@@ -84,10 +85,7 @@ They are loaded automatically via relative paths; users do **not** need to modif
 ├── nystrom_kpca_core.R
 ├── preimage.R
 ├── run_pca_baseline.R
-├── sorted_Group8.RData
-├── tree.bak
-├── treeview.sh
-└── tutorial_case1.md
+└── sorted_Group8.RData
 
 5 directories, 46 files
 ```
