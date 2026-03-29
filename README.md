@@ -84,9 +84,10 @@ They are loaded automatically via relative paths; users do **not** need to modif
 ├── run_pca_baseline.R
 ├── sorted_Group8.RData
 ├── tree.bak
-└── treeview.sh
+├── treeview.sh
+└── tutorial_case1.md
 
-5 directories, 45 files
+5 directories, 46 files
 ```
 <!-- readme-tree end -->
 
