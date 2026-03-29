@@ -96,6 +96,24 @@ They are loaded automatically via relative paths; users do **not** need to modif
 
 ---
 
+## 3. Minimal tutorial
+
+A fully runnable end-to-end tutorial is provided in [`tutorial_case1.md`](./tutorial_case1.md).
+
+The tutorial includes:
+- user-defined parameters,
+- required module loading,
+- SNP-type data generation,
+- signal specification,
+- train/test splitting,
+- DC-SIS feature screening,
+- group-wise KPCA,
+- de-sparsified LASSO inference,
+- final omnibus p-value calculation,
+- and interpretation of the expected output.
+
+This README keeps a concise overview of the repository, while the tutorial file serves as the minimal vignette-style entry point for new users.
+
 ## 3. Complete simulation example (Case 1)
 
 This section provides a **fully runnable example** demonstrating the complete NL-HSIM pipeline.  
