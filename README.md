@@ -1,5 +1,7 @@
 # NL-HSIM
 
+**Minimal tutorial:** please see [`tutorial_case1.md`](./tutorial_case1.md) for a fully runnable end-to-end example of the NL-HSIM workflow (from data generation and feature screening to KPCA, de-sparsified LASSO inference, and final omnibus p-values).
+
 **NL-HSIM** is a nonlinear high-dimensional set-based inference framework designed to detect group-level effects under complex correlation structures.  
 This repository provides fully reproducible code for simulation studies (Cases 1–3) and real data analysis.
 
