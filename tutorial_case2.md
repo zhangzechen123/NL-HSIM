@@ -31,7 +31,6 @@ source("nystrom_kpca_core.R")
 source("preimage.R")
 source("kpca.R")
 source("lasso_model_omnibus.R")
-source("sorted_Group8.RData")
 source("aspu/aSPUd2.R")
 source("aspu/Sum.R")
 source("aspu/SumSqU.R")
@@ -46,85 +45,63 @@ for (pkg in required_pkgs) {
   library(pkg, character.only = TRUE)
 }
 load("sorted_Group8.RData")#Load real SNP groups
-
-# 2) Simulate phenotype y
-# -----------------------------
-n_x <- 400
-set.seed(gg)
-idx <- sample(nrow(sorted_Group8[[1]]), n_x)
-
+gg  <- 1L      # simulation seed
+n <- 400       # sample size
+set.seed(gg)  
+idx <- sample(nrow(sorted_Group8[[1]]), n)
+# first two genes used to generate the signal
 x11 <- as.matrix(sorted_Group8[[1]][idx, , drop = FALSE])
 x22 <- as.matrix(sorted_Group8[[2]][idx, , drop = FALSE])
-
 # signal strength
 c1 <- 0
 c2 <- 1
 # ----- choose scenario -----
 # nonlinear CWSM:
-# hx1 <- rowSums(apply(x11[,1:15, drop=FALSE], 2, function(x) cos(pi*(x^2))))
-# hx2 <- rowSums(apply(x22[,1:50, drop=FALSE], 2, function(x) cos(pi*(x^2))))
+hx1 <- rowSums(apply(x11[,1:15, drop=FALSE], 2, function(x) cos(pi*(x^2))))
+hx2 <- rowSums(apply(x22[,1:50, drop=FALSE], 2, function(x) cos(pi*(x^2))))
 # nonlinear DSSM:
 # hx1 <- cos(pi*(x11[,1]^2)); hx2 <- cos(pi*(x22[,1]^2))
 # linear CWSM:
 # hx1 <- rowSums(apply(x11[,1:15, drop=FALSE], 2, function(x) x))
 # hx2 <- rowSums(apply(x22[,1:50, drop=FALSE], 2, function(x) x))
 # linear DSSM:  
-hx1 <- x11[, 1]
-hx2 <- x22[, 1]
-
+#hx1 <- x11[, 1]
+#hx2 <- x22[, 1]
 set.seed(gg * 100)
-epsilon <- rnorm(n_x, 0, 1)
+epsilon <- rnorm(n, 0, 1)
 y <- epsilon + c1 * hx1 + c2 * hx2
-# -----------------------------
-# 3) Build full matrix & split train/test
-# -----------------------------
-all <- do.call(cbind, sorted_Group8)
+all <- do.call(cbind, sorted_Group8)#Build full matrix and split train/test
 all_idx <- all[idx, , drop = FALSE]
-
 set.seed(gg)
 SAM <- sample(x = nrow(all_idx), size = nrow(all_idx) / 2)
-
 all_train <- as.matrix(all_idx[SAM,  , drop = FALSE])
 all_test  <- as.matrix(all_idx[-SAM, , drop = FALSE])
-
 y_train <- y[SAM]
 y_test  <- y[-SAM]
-
 # keep your original behavior: center test response
 Y <- y_test - mean(y_test)
-
-# -----------------------------
-# 4) DCSIS screening on concatenated SNPs (train), apply to test
-# -----------------------------
 A1 <- MFSIS(all_train, y_train, method = "DCSIS")
 sisdc <- all_test[, A1, drop = FALSE]
-# -----------------------------
-# 5) Map screened SNPs back to gene-wise list, drop empty groups
-# -----------------------------
+
+# Map screened SNPs back to gene-wise list, drop empty groups
 DC_test <- vector("list", length(sorted_Group8))
 original_indices <- integer(0)
-
 for (i in seq_along(sorted_Group8)) {
   keep_cols <- colnames(sisdc) %in% colnames(sorted_Group8[[i]])
   DC_test[[i]] <- sisdc[, keep_cols, drop = FALSE]
   if (ncol(DC_test[[i]]) > 0) original_indices <- c(original_indices, i)
 }
-
 empty <- which(sapply(DC_test, function(x) is.null(x) || ncol(x) == 0))
 Group <- DC_test[-empty]
-
 # where original gene1/gene2 land after dropping empties
 idx_gene1 <- which(original_indices == 1)
 idx_gene2 <- which(original_indices == 2)
 gene1_exists <- length(idx_gene1) > 0
 gene2_exists <- length(idx_gene2) > 0
-
 cat("[INFO] #groups after DCSIS:", length(Group), "\n")
 cat("[INFO] gene1_exists:", gene1_exists, " gene2_exists:", gene2_exists, "\n")
 
-# -----------------------------
-# 6) KPCA per group via modules -> PX_PA / PX_A
-# -----------------------------
+# KPCA for each retained gene group
 px_list_PA <- vector("list", length(Group))
 px_list_A  <- vector("list", length(Group))
 num_of_PC_PA <- integer(length(Group))
@@ -133,8 +110,8 @@ for (nn in seq_along(Group)) {
   cat("[KPCA] group:", nn, " n =", nrow(Group[[nn]]), " p =", ncol(Group[[nn]]), "\n")
   kp <- kpca_module_group(
     X_group = as.matrix(Group[[nn]]),
-    n_total = nrow(Group[[nn]]),   # match your old script behavior
-    seed    = gg * 1000 + nn,      # key fix: different folds per group
+    n_total = nrow(Group[[nn]]), 
+    seed    = gg * 1000 + nn,     
     nfold   = 10L
   )
   px_list_PA[[nn]] <- kp$PX_PA
@@ -145,9 +122,9 @@ for (nn in seq_along(Group)) {
 
 X_PA <- do.call(cbind, px_list_PA)
 X_A  <- do.call(cbind, px_list_A)
-cat("[INFO] Total PCs: PA =", ncol(X_PA), " A =", ncol(X_A), "\n")# -----------------------------
-# 7) de-sparsified lasso inference (PA/A)
-# -----------------------------
+cat("[INFO] Total PCs: PA =", ncol(X_PA), " A =", ncol(X_A), "\n")
+
+# KPCA for each retained gene group
 fit_PA <- lasso.proj(
   x = as.matrix(X_PA),
   y = Y,
@@ -172,9 +149,8 @@ cov_PA     <- fit_PA$beta.cov
 pval_px_A  <- fit_A$pval
 cov_A      <- fit_A$beta.cov
 
-# -----------------------------
-# 8) Multi-group omnibus (MinP(WY) + iART-A + ACATO) + FDR
-# -----------------------------
+
+# Group-wise omnibus aggregation
 split_blocks <- function(M, sizes) {
   out <- vector("list", length(sizes))
   st <- 1
@@ -300,7 +276,7 @@ p_value_raw <- as.numeric(c(
   p_SKAT_Gene_fdr[1], p_SKAT_Gene_fdr[2],
   p_SKAT_Gene1_fdr[1], p_SKAT_Gene1_fdr[2],
   p_aSPU_Gene_fdr[1], p_aSPU_Gene_fdr[2]
-))  # 保留小数点后6位，防止变成科学计数法
+))  
 
 p_value_clean <- ifelse(p_value_raw <= 9e-4, 0, p_value_raw)
 p_value_formatted <- formatC(p_value_clean, format = "f", digits = 5)
