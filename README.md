@@ -87,9 +87,10 @@ They are loaded automatically via relative paths; users do **not** need to modif
 ├── sorted_Group8.RData
 ├── tree.bak
 ├── treeview.sh
-└── tutorial_case1.md
+├── tutorial_case1.md
+└── tutorial_case3
 
-5 directories, 46 files
+5 directories, 47 files
 ```
 <!-- readme-tree end -->
 
