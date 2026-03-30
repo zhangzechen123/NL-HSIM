@@ -51,7 +51,6 @@ They are loaded automatically via relative paths; users do **not** need to modif
 │   ├── SumSqU.R
 │   ├── UminPd.R
 │   └── aSPUd2.R
-├── case2_example.R
 ├── environment.R
 ├── generate_x.R
 ├── hdi_lasso
@@ -88,6 +87,7 @@ They are loaded automatically via relative paths; users do **not** need to modif
 ├── tree.bak
 ├── treeview.sh
 ├── tutorial_case1.md
+├── tutorial_case2.md
 └── tutorial_case3.md
 
 5 directories, 47 files
