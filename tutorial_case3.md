@@ -1,14 +1,14 @@
-# NL-HSIM Minimal Tutorial (Case 1)
+# NL-HSIM Minimal Tutorial (Case 3)
 
-This tutorial provides a fully runnable end-to-end example of the NL-HSIM workflow using the Case 1 simulation setting.
+This tutorial provides a fully runnable end-to-end example of the NL-HSIM workflow using the Case 3 simulation setting.
 
 The tutorial covers:
 - parameter specification,
 - module loading,
-- SNP-type data generation,
+- continuous data generation,
 - nonlinear signal construction,
 - train/test splitting,
-- DC-SIS feature screenin
+- DC-SIS feature screening,
 - group-wise KPCA,
 - de-sparsified LASSO inference,
 - omnibus p-value combination,
@@ -23,7 +23,7 @@ Before running this tutorial, please make sure that:
 
 A quick-start setup is also described in [`README.md`](./README.md).
 
-## 1. Complete simulation example (Case 1)
+## 1. Complete simulation example (Case 3)
 
 This section provides a **fully runnable example** demonstrating the complete NL-HSIM pipeline.  
 Users may modify only a few parameters (sample size, correlation level, signal strength) and directly run the code in **RStudio (recommended)**.
@@ -56,15 +56,15 @@ source("run_pca_baseline.R")
 ## Generate continuous predictors (Case 3)
 ## dat <- .gen_continuous_X(n = n, p1 = p1, p2 = p2, rho = rho, seed = seed)
 ## Case 2 uses real SNP data (sorted_Group8.RData)
-## Here we use Case 1 (SNP data)
-dat <- .gen_snp_X(n = n, p1 = p1, p2 = p2, rho = rho, seed = seed)
+## Here we use Case 3 (continuous data)
+dat <- .gen_continuous_X(n = n, p1 = p1, p2 = p2, rho = rho, seed = seed)
 X1 <- dat$X1
 X2 <- dat$X2
 ## Step 3. Specify Signal Structure
-##Example: Case 1 – Nonlinear CWSM (Cosine-based)
-hx1 <- apply(X1[, 1:15, drop = FALSE], 2, function(x) cos(pi * (x^2)))
+##Example: Case 3 – Nonlinear CWSM (Cosine-based)
+hx1 <- apply(X1[, 1:15, drop = FALSE], 2, function(x) x^2)
 hx1 <- rowSums(hx1)
-hx2 <- apply(X2[, 1:50, drop = FALSE], 2, function(x) cos(pi * (x^2)))
+hx2 <- apply(X2[, 1:50, drop = FALSE], 2, function(x) x^2)
 hx2 <- rowSums(hx2)
 ## Step 4. Generate Outcome
 set.seed(seed * 100L)
@@ -199,15 +199,15 @@ under different NL-HSIM designs and the linear baseline.
 The elements of p_value_raw are ordered as follows:
 ```r
  [1] 0.0000000 #NL-HSIM(O) omnibus p-value for Group 1
- [2] 0.2674444 #NL-HSIM(O) omnibus p-value for Group 2
+ [2] 0.1932917 #NL-HSIM(O) omnibus p-value for Group 2
  [3] 0.0000000 #NL-HSIM(P) p-value for Group 1 (pre-image based KPC selection)  
- [4] 0.4204262 #NL-HSIM(P) p-value for Group 2
+ [4] 0.1165299 #NL-HSIM(P) p-value for Group 2
  [5] 0.0000000 #NL-HSIM(A) p-value for Group 1 (average-eigenvalue based KPC selection)  
- [6] 0.3792151 #NL-HSIM(A) p-value for Group 2
+ [6] 0.2168991 #NL-HSIM(A) p-value for Group 2
  [7] 0.0000000 #NL-HSIM(PA) p-value for Group 1 (hybrid pre-image + average selection)  
- [8] 0.1981656 #NL-HSIM(PA) p-value for Group 2
- [9] 0.9198808 #Linear-HSIM p-value for Group 1 (PCA-based linear baseline)  
- [10]0.3251009 #Linear-HSIM p-value for Group 2
+ [8] 0.1738321 #NL-HSIM(PA) p-value for Group 2
+ [9] 0.3758289 #Linear-HSIM p-value for Group 1 (PCA-based linear baseline)  
+ [10]0.4701969 #Linear-HSIM p-value for Group 2
 
 ```
 In this experiment, all NL-HSIM variants yield statistically significant p-values
