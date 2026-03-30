@@ -1,32 +1,52 @@
-setwd('C:/research/paper/NL-HSIM')
-# ============================================================
-# Case2: Real-data-driven simulation (multi-group genes)
-#
-# Pipeline (README style):
-# 0) source environment + modules
-# 1) load real SNP groups (list of genes)
-# 2) simulate phenotype y (linear/nonlinear)
-# 3) train/test split
-# 4) DCSIS screening on concatenated SNPs (train), apply to test
-# 5) map screened SNPs back to gene-list (drop empty groups)
-# 6) KPCA per gene-group via modules -> PX_PA / PX_A (list)
-# 7) de-sparsified lasso inference (PA/A separately)
-# 8) group-wise omnibus: MinP(WY) + iART-A + ACATO, then FDR
-# ============================================================
-# -----------------------------
-# 0) Setup & source modules
-# -----------------------------
+# NL-HSIM Minimal Tutorial (Case 2: Real-data-driven simulation)
+
+This tutorial provides a fully runnable end-to-end example of **Case 2** in NL-HSIM, where the simulation is driven by **real SNP data grouped by genes**.
+
+Compared with Case 1, which uses synthetic grouped predictors, Case 2 starts from real SNP groups stored in `sorted_Group8.RData`, simulates linear or nonlinear phenotype signals on selected genes, and then evaluates NL-HSIM against existing set-based methods such as **SKAT** and **aSPU**.
+
+This tutorial covers:
+- loading real SNP groups,
+- generating linear or nonlinear outcomes,
+- train/test splitting,
+- DC-SIS screening,
+- mapping screened SNPs back to gene groups,
+- group-wise KPCA,
+- de-sparsified LASSO inference,
+- omnibus aggregation with FDR correction,
+- and comparison with SKAT / aSPU.
+
+---
+
+## Requirements
+
+Before running this tutorial, please make sure that:
+
+- the entire `NL-HSIM` repository has been downloaded,
+- the working directory is set to the project root,
+- and the following files are available in the project directory:
+
+```r
 source("environment.R")
 source("nystrom_kpca_core.R")
 source("preimage.R")
 source("kpca.R")
-source("lasso_model_omnibus.R")  # provides lasso.proj / p.adjust.wy / ART.A / ACATO, etc.
+source("lasso_model_omnibus.R")
+source("sorted_Group8.RData")
+source("aspu/aSPUd2.R")
+source("aspu/Sum.R")
+source("aspu/SumSqU.R")
+source("aspu/UminPd.R")
+source("aspu/PowerUniv.R")
 
-# -----------------------------
-# 1) Load real-data SNP groups
-# -----------------------------
-load("sorted_Group8.RData")  # -> sorted_Group8 (list of gene matrices)
-# -----------------------------
+required_pkgs <- c( "mvtnorm", "SKAT")
+for (pkg in required_pkgs) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+  library(pkg, character.only = TRUE)
+}
+load("sorted_Group8.RData")#Load real SNP groups
+
 # 2) Simulate phenotype y
 # -----------------------------
 n_x <- 400
