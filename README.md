@@ -51,6 +51,8 @@ They are loaded automatically via relative paths; users do **not** need to modif
 │   ├── SumSqU.R
 │   ├── UminPd.R
 │   └── aSPUd2.R
+├── benchmark_runtime_memory.R
+├── block test of kpcs matrix.R
 ├── environment.R
 ├── generate_x.R
 ├── hdi_lasso
@@ -90,7 +92,7 @@ They are loaded automatically via relative paths; users do **not** need to modif
 ├── tutorial_case2.md
 └── tutorial_case3.md
 
-5 directories, 47 files
+5 directories, 49 files
 ```
 <!-- readme-tree end -->
 
