@@ -1,38 +1,48 @@
 # NL-HSIM
 
-**Minimal tutorial:** please see [`tutorial_case1.md`](./tutorial_case1.md) for a fully runnable end-to-end example of the NL-HSIM workflow (from data generation and feature screening to KPCA, de-sparsified LASSO inference, and final omnibus p-values).
-
 **NL-HSIM** is a nonlinear high-dimensional set-based inference framework designed to detect group-level effects under complex correlation structures.  
-This repository provides fully reproducible code for simulation studies (Cases 1–3) and real data analysis.
+This repository provides fully reproducible code for：
+simulation studies (Cases 1–3)
+real data analysis
+and a minimal end-to-end tutorial of the full NL-HSIM workflow.
 
-The implementation follows a **transparent script-based design**: all simulation settings, signal structures, and tuning parameters are explicitly specified in scripts, with no hidden defaults inside functions.
+**Minimal tutorial:** 
+For a fully runable example, please see [`tutorial_case1.md`](./tutorial_case1.md) 
+The tutorial walks through the complete NL-HSIM pipeline, including:
+data generation,
+feature screening,
+group-wise KPCA,
+de-sparsified LASSO inference,
+and final omnibus p-value calculation.
+
+The repository follows a transparent script-based design: simulation settings, signal structures, and tuning parameters are specified explicitly in scripts, with no hidden defaults inside functions.
 
 ---
 
 ## 1. Requirements
 
 - **R ≥ 4.0** (recommended)
-- Required R packages are automatically loaded in `environment.R`,which loads required packages and defines core numerical utilities, including squared-distance computation and data-driven kernel bandwidth selection. This file is essential for ensuring numerical stability and reproducibility across simulation settings.
+- Required packages are loaded in [`environment.R`](./environment.R), which also defines core numerical utilities used throughout the project, including squared-distance computation and data-driven kernel bandwidth selection.
 
-### Quick start
-- Please **download the entire `NL-HSIM` repository** and extract it to a local directory.
-- Open R (RStudio is recommended) and set the working directory to the project root folder
-   (i.e., the folder that contains `README.md` and `environment.R`).
+## 2. Quick start
+Download the full repository from GitHub ([`Code -> Download ZIP)`] and extract it locally.
+Open R (RStudio recommended).
+Set the working directory to the project root, i.e., the folder containing [`README.md`](./README.md) and [`environment.R`](./environment.R).
+
+Example:
 ```r
-## After downloading "Code -> Download ZIP" and unzipping,
-## GitHub typically creates a folder named "NL-HSIM-main".
-## Set the working directory to the project root (the folder containing environment.R).
-setwd("C:/Users/Downloads/NL-HSIM-main/NL-HSIM-main") # <-- example, adjust as needed
+## Adjust this path to your local project folder
+setwd("C:/Users/Downloads/NL-HSIM-main")
 
-## Sanity check: these files should exist in the working directory
+## Sanity checks
 stopifnot(file.exists("environment.R"))
 stopifnot(file.exists("generate_x.R"))
 ```
 ---
 
-## 2. Repository structure
+## 3. Repository structure
 
-The scripts in `hdi_lasso/` are utility functions used by `lasso_model_omnibus.R`.  
+The scripts in [`hdi_lasso/`](./hdi_lasso) are utility functions used by [`lasso_model_omnibus.R`](./lasso_model_omnibus.R).  
 They are loaded automatically via relative paths; users do **not** need to modify the working directory.
 
 <!-- readme-tree start -->
@@ -99,30 +109,41 @@ They are loaded automatically via relative paths; users do **not** need to modif
 
 ---
 
-## 3. Minimal tutorial
+## 4. Main entry files
 
-A fully runnable end-to-end tutorial is provided in [`tutorial_case1.md`](./tutorial_case1.md).
+The main workflow is organized around the following files:
 
-The tutorial includes:
-- user-defined parameters,
-- required module loading,
-- SNP-type data generation,
-- signal specification,
-- train/test splitting,
-- DC-SIS feature screening,
-- group-wise KPCA,
-- de-sparsified LASSO inference,
-- final omnibus p-value calculation,
-- and interpretation of the expected output.
+- [`environment.R`](./environment.R)
+  Loads required packages and defines shared numerical utilities.
+- [`generate_x.R`](./generate_x.R)
+  Generates simulated predictor data.
+- [`kpca.R`](./kpca.R)
+  Performs kernel PCA–based feature extraction.
+- [`nystrom_kpca_core.R`](./nystrom_kpca_core.R)
+  Implements the Nyström approximation for scalable KPCA.
+- [`preimage.R`](./preimage.R)
+  Contains pre-image reconstruction routines.
+- [`lasso_model_omnibus.R`](./lasso_model_omnibus.R)
+  Performs de-sparsified LASSO inference and omnibus p-value aggregation.
+- [`run_pca_baseline.R`](./run_pca_baseline.R)
+  Runs the linear PCA-based baseline.
+- [`tutorial_case1.md`](./tutorial_case1.md), [`tutorial_case2.md`](./tutorial_case2.md), [`tutorial_case3.md`](./tutorial_case3.md)
+  Runnable tutorial documents for the three simulation settings.
 
-This README keeps a concise overview of the repository, while the tutorial file serves as the minimal vignette-style entry point for new users.
+## 5. Minimal tutorial and reproducibility
+A minimal vignette-style tutorial is provided in [`tutorial_case1.md`](./tutorial_case1.md)
+, which demonstrates the complete NL-HSIM workflow from simulated SNP-type data generation to final omnibus inference.
 
-## 4. Notes
+This repository is designed for **full reproducibility**.
+All simulation settings, signal structures, and tuning parameters are defined explicitly in scripts rather than hidden inside package-like wrappers.
 
-- The repository follows a script-based design for transparency and reproducibility.
-- Simulation settings and signal structures are explicitly defined in scripts.
-- The tutorial file `tutorial_case1.md` is intended as the minimal entry point for new users.
-- Real-data analysis scripts and additional simulation settings remain available in the repository.
+## 6. Notes
+This repository emphasizes transparency, reproducibility, and script-level control.
+[`tutorial_case1.md`](./tutorial_case1.md) is the recommended entry point for new users.
+Additional simulation settings and real-data analysis scripts are also included in the repository.
+
+## 7. Citation / usage note
+If you use this repository in your work, please cite the corresponding NL-HSIM manuscript.
 
 ---
 
